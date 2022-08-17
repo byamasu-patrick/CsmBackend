@@ -21,6 +21,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+
 app.Services.GetRequiredService<IHostExtensions>();
    
 

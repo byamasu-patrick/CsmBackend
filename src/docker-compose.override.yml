@@ -27,6 +27,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
+  orderdb:
+    container_name: orderdb
+    environment:
+        SA_PASSWORD: "Admin@1234"
+        ACCEPT_EULA: "Y"
+    restart: always
+    ports:
+        - "1433:1433"
+
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+        - "5672:5672"
+        - "15672:15672"
+
   pgadmin:
     container_name: pgadmin
     environment:
@@ -68,8 +84,10 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - "CacheSettings:ConnectionString=basketdb:6379"
       - "GrpcSettings:DiscountUrl=http://discount.grpc"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
     depends_on:
-      - basketdb 
+      - basketdb
+      - rabbitmq
     ports:
       - "8002:80"
 
@@ -94,4 +112,17 @@ services:
       - discountdb
     ports:
       - "8004:80"
+
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=Admin@1234"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    depends_on:
+      - orderdb
+      - rabbitmq
+    ports:
+      - "8005:80"
 
