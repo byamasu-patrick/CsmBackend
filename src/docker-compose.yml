@@ -52,11 +52,18 @@ services:
       context: .
       dockerfile: Services/Ordering/Ordering.API/Dockerfile
 
+  shopapigateway:
+    image: ${DOCKER_REGISTRY-}shopapigateway
+    build:
+      context: .
+      dockerfile: ApiGateways/ShopApiGateway/Dockerfile
+
 volumes:
   mongo_data:
   portainer_data:
   postgres_data:
   pgadmin_data:
+
 
 
 
