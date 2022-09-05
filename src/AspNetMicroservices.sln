@@ -53,9 +53,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shop.API", "Services\Shop\S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShopApiGateway", "ApiGateways\ShopApiGateway\ShopApiGateway.csproj", "{2DDF8560-652E-4B3B-B1D7-A5343D88D39F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shopping.Aggregator", "ApiGateways\Shopping.Aggregator\Shopping.Aggregator.csproj", "{A3AD8778-F603-407D-A6FB-708F49EF588E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shopping.Aggregator", "ApiGateways\Shopping.Aggregator\Shopping.Aggregator.csproj", "{A3AD8778-F603-407D-A6FB-708F49EF588E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Logging", "BuildingBlocks\Common.Logging\Common.Logging.csproj", "{3282418A-DB69-4A23-BFE0-4397B2F2BF29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common.Logging", "BuildingBlocks\Common.Logging\Common.Logging.csproj", "{3282418A-DB69-4A23-BFE0-4397B2F2BF29}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmpMailer", "Services\AmpMailer\AmpMailer.csproj", "{44274A2B-5605-4389-8358-1A3AB2573675}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -135,6 +137,10 @@ Global
 		{3282418A-DB69-4A23-BFE0-4397B2F2BF29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3282418A-DB69-4A23-BFE0-4397B2F2BF29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3282418A-DB69-4A23-BFE0-4397B2F2BF29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44274A2B-5605-4389-8358-1A3AB2573675}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44274A2B-5605-4389-8358-1A3AB2573675}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44274A2B-5605-4389-8358-1A3AB2573675}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44274A2B-5605-4389-8358-1A3AB2573675}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +169,7 @@ Global
 		{2DDF8560-652E-4B3B-B1D7-A5343D88D39F} = {3B3BE3F5-BA27-43A9-9BB7-D47DBB0A427D}
 		{A3AD8778-F603-407D-A6FB-708F49EF588E} = {3B3BE3F5-BA27-43A9-9BB7-D47DBB0A427D}
 		{3282418A-DB69-4A23-BFE0-4397B2F2BF29} = {F4B1DFCA-A3EB-46EB-8067-660BEBD61E1F}
+		{44274A2B-5605-4389-8358-1A3AB2573675} = {4CDCEA41-CD66-4CDE-86B4-7CECA71EA5B2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A873D7A6-0CC3-439F-AF86-65EA0417999F}

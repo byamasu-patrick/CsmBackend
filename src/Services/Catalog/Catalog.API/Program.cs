@@ -8,6 +8,7 @@ using HealthChecks.UI.Client;
 using MongoDB.Driver;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,13 @@ builder.Services.AddSwaggerGen( c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog.API", Version = "v1" });
 });
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -37,9 +45,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
 
-app.UseAuthorization();
+app.UseCors("corsapp");
 
 //app.UseEndpoints(endpoints =>
 //{

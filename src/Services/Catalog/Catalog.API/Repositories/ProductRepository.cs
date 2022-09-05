@@ -39,7 +39,6 @@ namespace Catalog.API.Repositories
                             .Find(filter)
                             .ToListAsync();
         }
-
         public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)
         {
             FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Category, categoryName);
@@ -49,8 +48,15 @@ namespace Catalog.API.Repositories
                             .Find(filter)
                             .ToListAsync();
         }
+        public async Task<IEnumerable<Product>> GetProductByShopOwner(string ownerId)
+        {
+            FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.UserId, ownerId);
 
-
+            return await _context
+                            .Products
+                            .Find(filter)
+                            .ToListAsync();
+        }
         public async Task CreateProduct(Product product)
         {
             await _context.Products.InsertOneAsync(product);

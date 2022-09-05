@@ -16,5 +16,7 @@ namespace Catalog.API.Entities
         public string Description { get; set; }
         public string ImageFile { get; set; }
         public decimal Price { get; set; }
+        public int ItemsInStock { get; set; }
+        public string UserId { get; set; }
     }
 }
