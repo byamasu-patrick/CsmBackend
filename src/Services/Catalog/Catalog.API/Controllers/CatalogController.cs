@@ -1,21 +1,27 @@
-﻿using Catalog.API.Entities;
+﻿using AutoMapper;
+using Catalog.API.Entities;
+using Catalog.API.Models;
 using Catalog.API.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using System.Net;
 
 namespace Catalog.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class CatalogController : ControllerBase
     {
         private readonly IProductRepository _repository;
         private readonly ILogger<CatalogController> _logger;
-        public CatalogController(IProductRepository repository, ILogger<CatalogController> logger)
+        private IMapper _mapper;
+
+        public CatalogController(IProductRepository repository, ILogger<CatalogController> logger, IMapper mapper)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<Product>), (int) HttpStatusCode.OK)]
@@ -49,6 +55,15 @@ namespace Catalog.API.Controllers
             return Ok(products);
         }
 
+        [Route("[action]/{ownerId}", Name = "GetProductByOwner")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductByOwner(string ownerId)
+        {
+            var products = await _repository.GetProductByShopOwner(ownerId);
+            return Ok(products);
+        }
+
         [Route("[action]/{name}", Name = "GetProductByName")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
@@ -66,8 +81,12 @@ namespace Catalog.API.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Product>> CreateProduct([FromBody] Product product)
+        public async Task<ActionResult<Product>> CreateProduct([FromBody] CreateProductDto productDto)
         {
+            var product = _mapper.Map<Product>(productDto);
+
+            product.Id = ObjectId.GenerateNewId().ToString();
+
             await _repository.CreateProduct(product);
 
             return CreatedAtRoute("GetProduct", new { id = product.Id }, product);

@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "AmpMailer": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
