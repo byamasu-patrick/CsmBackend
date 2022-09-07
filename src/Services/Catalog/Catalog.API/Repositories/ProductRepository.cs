@@ -50,7 +50,7 @@ namespace Catalog.API.Repositories
         }
         public async Task<IEnumerable<Product>> GetProductByShopOwner(string ownerId)
         {
-            FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.UserId, ownerId);
+            FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.UserId, ownerId.Trim());
 
             return await _context
                             .Products

@@ -11,6 +11,7 @@ namespace Ordering.Application.Features.Queries.GetOrdersList
         public int Id { get; set; }
         public string UserName { get; set; }
         public decimal TotalPrice { get; set; }
+        public List<string> Products { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }

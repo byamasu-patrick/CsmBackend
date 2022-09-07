@@ -5,6 +5,7 @@ using Ordering.Application.Features.Commands.CheckoutOrder;
 using Ordering.Application.Features.Orders.Commands.DeleteOrder;
 using Ordering.Application.Features.Orders.Commands.UpdateOrder;
 using Ordering.Application.Features.Queries.GetOrdersList;
+using Ordering.Application.Features.Queries.GetAllOrders;
 using System.Net;
 
 namespace Ordering.API.Controllers
@@ -20,8 +21,18 @@ namespace Ordering.API.Controllers
             _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
         }
 
-        [HttpGet("{userName}", Name = "GetOrder")]
+        [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<OrdersVm>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrders()
+        {
+            var query = new GetAllOrdersQuery();
+            var orders = await _mediator.Send(query);
+            return Ok(orders);
+        }
+
+
+        [HttpGet("{userName}", Name = "GetOrder")]
+        [ProducesResponseType(typeof(IEnumerable<Application.Features.Queries.GetOrdersList.OrdersVm>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<OrdersVm>>> GetOrdersByUserName(string userName)
         {
             var query = new GetOrdersListQuery(userName);

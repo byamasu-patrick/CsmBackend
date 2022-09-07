@@ -55,6 +55,15 @@ namespace Catalog.API.Controllers
             return Ok(products);
         }
 
+        [Route("[action]/{ownerId}", Name = "GetProductByOwner")]
+        [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductByOwner(string ownerId)
+        {
+            var products = await _repository.GetProductByShopOwner(ownerId);
+            return Ok(products);
+        }
+
         [Route("[action]/{name}", Name = "GetProductByName")]
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]

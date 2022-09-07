@@ -61,12 +61,16 @@ namespace User.Infrastructure.Persistence
                     UserTypeName = AuthConstants.ADMIN
                 },
                 new UserType() {
+                    UserTypeName = AuthConstants.SHOP_OWNER
+                },
+                new UserType() {
                     UserTypeName = AuthConstants.PREMIUM_USER
                 },
                 new UserType() {
                     UserTypeName = AuthConstants.FREE_USER
                 }
             };
+
         private static IEnumerable<EmailTemplate> GetPreconfiguredEmailTemplate() => new List<EmailTemplate>
             {
                 new EmailTemplate() {

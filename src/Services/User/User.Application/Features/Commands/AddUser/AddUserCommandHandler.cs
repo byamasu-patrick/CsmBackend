@@ -50,6 +50,16 @@ namespace User.Application.Features.Commands.AddUser
 
             (string hash, string salt) = _passowrdService.HashPassword(request.Password);
 
+            var accountType = 4;
+            if (request.AccountType.Trim().Equals("Shop-Owner"))
+            {
+                accountType = (int) AccountType.ShopOwner;
+            }
+            else
+            {
+                accountType = (int)AccountType.FreeUser;
+            }
+
             // Send email to the Queue here using MassTransit and RabbitMQ
             var userData = new UserData
             {
@@ -59,7 +69,7 @@ namespace User.Application.Features.Commands.AddUser
                 EmailConfirmed = false,
                 Password = hash,
                 Salt = salt,
-                UserTypeId = (int) AccountType.FreeUser,
+                UserTypeId = (int) accountType,
                 Profile = new UserProfile
                 {
                     FirstName = request.FirstName,

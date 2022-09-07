@@ -11,6 +11,7 @@ namespace Ordering.Application.Features.Commands.CheckoutOrder
     {
         public string UserName { get; set; }
         public decimal TotalPrice { get; set; }
+        public List<string> Products { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }

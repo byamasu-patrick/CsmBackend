@@ -9,7 +9,8 @@ namespace User.Application.Enums
     public enum AccountType
     {
         Admin = 1,
-        PremiumUser = 2,
-        FreeUser = 3
+        ShopOwner = 2,
+        PremiumUser = 3,
+        FreeUser = 4
     }
 }

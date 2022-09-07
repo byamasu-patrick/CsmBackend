@@ -1,5 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Polly;
 
 namespace Ordering.API.Extensions
@@ -18,7 +17,7 @@ namespace Ordering.API.Extensions
                 {
                     logger.LogInformation("Migrating database associated with context {DbContextName}", typeof(TContext).Name);
 
-                    var retry = Policy.Handle<SqlException>()
+                    var retry = Policy.Handle<Exception>()
                             .WaitAndRetry(
                                 retryCount: 5,
                                 sleepDurationProvider: retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), // 2,4,8,16,32 sc
@@ -34,7 +33,7 @@ namespace Ordering.API.Extensions
 
                     logger.LogInformation("Migrated database associated with context {DbContextName}", typeof(TContext).Name);
                 }
-                catch (SqlException ex)
+                catch (Exception ex)
                 {
                     logger.LogError(ex, "An error occurred while migrating the database used on context {DbContextName}", typeof(TContext).Name);
                 }
