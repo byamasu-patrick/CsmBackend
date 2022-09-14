@@ -1,10 +1,11 @@
 ﻿using Catalog.API.Entities;
+using Catalog.API.Models;
 
 namespace Catalog.API.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        Task<IEnumerable<Product>> GetProducts();
+        Task<ProductResponse<Product>> GetProducts(int Page);
         Task<Product> GetProduct(string id);
         Task<IEnumerable<Product>> GetProductByName(string name);
         Task<IEnumerable<Product>> GetProductByCategory(string categoryName);

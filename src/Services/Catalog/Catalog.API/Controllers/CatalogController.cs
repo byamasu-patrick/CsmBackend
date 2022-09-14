@@ -23,11 +23,11 @@ namespace Catalog.API.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
-        [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<Product>), (int) HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        [HttpGet("{page}")]
+        [ProducesResponseType(typeof(ProductResponse<Product>), (int) HttpStatusCode.OK)]
+        public async Task<ActionResult<ProductResponse<Product>>> GetProducts(int page)
         {
-            var products = await _repository.GetProducts();
+            var products = await _repository.GetProducts(page);
             return Ok(products);
         }
         [HttpGet("{id:length(24)}", Name = "GetProduct")]

@@ -2,6 +2,10 @@
 using Catalog.API.Entities;
 using Catalog.API.Data.Interfaces;
 using MongoDB.Driver;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Catalog.API.Models;
+using System;
 
 namespace Catalog.API.Repositories
 {
@@ -14,12 +18,26 @@ namespace Catalog.API.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<ProductResponse<Product>> GetProducts(int Page)
         {
-            return await _context
-                            .Products
-                            .Find(p => true)
+            var pageSize = 6f;
+
+            var filter = Builders<Product>.Filter.Ne(x => x.ItemsInStock, 0);
+
+            var TotalPages = _context.Products.Count(filter);
+
+            var result = await _context.Products
+                            .Find(filter)
+                            .Skip((Page - 1) * (int) pageSize)
+                            .Limit((int) pageSize)
                             .ToListAsync();
+
+            return new ProductResponse<Product>
+            {
+                CurrentPage = Page,
+                Results = result,
+                TotalPages = (int) Math.Ceiling(TotalPages / pageSize)
+            };
         }
 
         public async Task<Product> GetProduct(string id)
