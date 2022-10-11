@@ -1,0 +1,322 @@
+# MongoDB
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalogdb
+  template:
+    metadata:
+      labels:
+        app: catalogdb
+    spec:
+      containers:
+        - name: catalogdb
+          image: mongo
+          ports: 
+            - containerPort: 27017
+              name: catalogdb   
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogdb-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 27017
+      targetPort: 27017
+  type: LoadBalancer
+  selector:
+    app: catalogdb
+
+---
+
+# Postgres DB
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discountdb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discountdb
+  template:
+    metadata:
+      labels:
+        app: discountdb
+    spec:
+      containers:
+        - name: discountdb
+          image: postgres
+          ports: 
+            - containerPort: 5432
+              name: discountdb
+          env:
+            - name: POSTGRES_USER
+              value: admin  
+            - name: POSTGRES_PASSWORD
+              value: Admin@1234
+            - name: POSTGRES_DB
+              value: UserDb
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "250m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: discountdb-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+  type: LoadBalancer
+  selector:
+    app: discountdb
+
+---
+# RabbitMQ Configuration
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq
+          image: rabbitmq:3.10-management
+          ports: 
+            - containerPort: 5672
+              name: amqp
+            - containerPort: 15672
+              name: rabbitmq
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+spec:
+  ports:
+    - port: 15672
+      targetPort: 15672
+      name: rabbitmq
+    - port: 5672
+      targetPort: 5672
+      name: amqp
+  type: LoadBalancer
+  selector:
+    app: discountdb
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogapi-deployment
+  namespace: default
+  labels:
+    app: catalogapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: catalogapi
+  template:
+    metadata:
+      labels:
+        app: catalogapi
+    spec:
+      #imagePullSecrets:
+      #  - name: csm-secret-key
+      containers:
+        - name: catalogapi
+          image: csmbackend.azurecr.io/catalogapi:latest
+          imagePullPolicy: Always          
+          ports:
+            - containerPort: 80
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: DatabaseSettings__ConnectionString
+              value: "mongodb://catalogdb-service:27017"  
+          resources:   
+            requests:
+              memory: "64Mi"
+              cpu: "0.1"
+            limits:
+              memory: "128Mi"
+              cpu: "0.3"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogapi-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
+  selector:
+    app: catalogapi
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: userapi-deployment
+  namespace: default
+  labels:
+    app: userapi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: userapi
+  template:
+    metadata:
+      labels:
+        app: userapi
+    spec:
+      containers:
+        - name: userapi
+          image: csmbackend.azurecr.io/userapi:latest
+          imagePullPolicy: Always           
+          ports:
+            - containerPort: 8007   
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: ConnectionStrings__OrderingConnectionString
+              value: "Server=discountdb-service;Port=5432;Database=UserDb;User Id=admin;Password=Admin@1234;" 
+            - name: EventBusSettings__HostAddress
+              value: "amqp://guest:guest@rabbitmq-service:5672"  
+            - name: EmailSettings__FromAddress
+              value: "ptrckbyamasu@gmail.com"
+            - name: EmailSettings__FromName
+              value: "Cloud Business Technology" 
+            - name: JwtConfig__ValidIssuer
+              value: cloudstoresmalawi.com    
+            - name: JwtConfig__ValidAudience
+              value: cloudstoresmalawi.com   
+            - name: JwtConfig__FacebookAudience
+              value: "754381865748304"
+            - name: JwtConfig__Secret
+              value: "770A8A65DA156D24770A8A65DA156D24"
+          resources:   
+            requests:
+              memory: "64Mi"
+              cpu: "0.1"
+            limits:
+              memory: "128Mi"
+              cpu: "0.3"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: userapi-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 8007
+      targetPort: 8007
+  type: LoadBalancer
+  selector:
+    app: userapi
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ampmailer-deployment
+  namespace: default
+  labels:
+    app: ampmailer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ampmailer
+  template:
+    metadata:
+      labels:
+        app: ampmailer
+    spec:
+      #imagePullSecrets:
+      #  - name: csm-secret-key
+      containers:
+        - name: ampmailer
+          image: csmbackend.azurecr.io/ampmailer:latest
+          imagePullPolicy: Always         
+          ports:
+            - containerPort: 8080
+          env:
+            - name: ASPNETCORE_ENVIRONMENT
+              value: Development
+            - name: SecurityKey
+              value: patuyitwqzogggyb
+            - name: SenderEmail
+              value: ptrckbyamasu@gmail.com  
+            - name: EmailPort
+              value: "587"    
+            - name: EmailHost
+              value: smtp.gmail.com    
+            - name: EventBusSettings__HostAddress
+              value: "amqp://guest:guest@rabbitmq-service:5672"  
+          resources:   
+            requests:
+              memory: "64Mi"
+              cpu: "0.1"
+            limits:
+              memory: "128Mi"
+              cpu: "0.3"  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ampmailer-service
+spec:
+  ports:
+    - protocol: TCP
+      port: 8080
+  type: LoadBalancer
+  selector:
+    app: ampmailer

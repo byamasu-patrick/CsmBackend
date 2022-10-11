@@ -1,0 +1,58 @@
+apiVersion: mongodb.com/v1
+kind: MongoDB
+metadata:
+ name: catalogdb
+ spec:
+   version: 4.2.1
+   type: Standalone
+   opsManager:
+     configMapRef:
+      name: mongodb-test
+   credentials: my-credentials
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogapi
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: catalog.api
+  template:
+    metadata:
+      labels:
+        app: catalog.api
+    spec:
+      imagePullSecrets:
+      - name: acr-secret
+      containers:
+      - name: catalogapi
+        image: csmbackend.azurecr.io:443/catalogapi:latest
+        imagePullPolicy: Always
+        resources:   
+        env:
+          - name: DatabaseSettings__ConnectionString
+            value: "mongodb://mongodb:27017"  
+          - name: DatabaseSettings__CollectionName
+            value: "Products"
+          - name: DatabaseSettings__DatabaseName 
+            value: "CatalogDb"
+
+        ports:
+        - containerPort: 80
+        #https://www.youtube.com/watch?v=zg1T72SO-6g
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-service
+spec:
+  selector:
+    app: catalog.api
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 80

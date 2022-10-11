@@ -21,9 +21,16 @@ builder.Services.AddOcelot()
         cacheSettings.WithDictionaryHandle();
     });
 
+builder.Services.AddCors(p => p.AddPolicy("corsapp", builder =>
+{
+    builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+}));
 // Configure Ocelot API Gateway to be used in this service
 
 var app = builder.Build();
+
+
+app.UseCors("corsapp");
 
 app.UseOcelot().Wait();
 

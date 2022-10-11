@@ -18,5 +18,8 @@ namespace Catalog.API.Entities
         public decimal Price { get; set; }
         public int ItemsInStock { get; set; }
         public string UserId { get; set; }
+        //public IList<ProductReview> Reviews { get; set; }
+        [BsonElement]
+        public DateTime CreatedAt { get; set; }
     }
 }

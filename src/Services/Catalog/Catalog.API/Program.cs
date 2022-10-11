@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using HealthChecks.UI.Client;
 using MongoDB.Driver;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<ICatalogContext, CatalogContext>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductReviewRepository, ProductReviewRepository>();
 
 
 builder.Services.AddHealthChecks()

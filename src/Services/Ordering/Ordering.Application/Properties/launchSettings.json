@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "Ordering.Application": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:64593;http://localhost:64594"
+    }
+  }
+}

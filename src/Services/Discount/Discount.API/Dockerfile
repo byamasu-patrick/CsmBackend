@@ -13,7 +13,7 @@ WORKDIR "/src/Services/Discount/Discount.API"
 RUN dotnet build "Discount.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Discount.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "Discount.API.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app

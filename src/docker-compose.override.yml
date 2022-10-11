@@ -21,6 +21,8 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=Admin@1234
       - POSTGRES_DB=DiscountDb
+      - POSTGRES_DB=UserDb
+      - POSTGRES_DB=OrderDb
     restart: always
     ports:
         - "5432:5432"
@@ -118,10 +120,10 @@ services:
     container_name: ordering.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "ConnectionStrings:OrderingConnectionString=Server=orderdb;Database=OrderDb;User Id=sa;Password=Admin@1234"
+      - "ConnectionStrings:OrderingConnectionString=Server=discountdb;Database=OrderDb;User Id=admin;Password=Admin@1234"
       - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
     depends_on:
-      - orderdb
+      - discountdb
       - rabbitmq
     ports:
       - "8005:80"
@@ -154,3 +156,36 @@ services:
     ports:
       - "8006:80"
 
+
+  user.api:
+    container_name: user.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "ConnectionStrings:DefaultConnection=Server=discountdb;Port=5432;Database=UserDb;User Id=admin;Password=Admin@1234;"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "EmailSettings:FromAddress=ptrckbyamasu@gmail.com"
+      - "EmailSettings:FromName=Cloud Business Technology"
+      - "JwtConfig:ValidIssuer=cloudstoremalawi.com"
+      - "JwtConfig:ValidAudience=cloudstoremalawi.com"
+      - "JwtConfig:FacebookAudience=754381865748304"
+      - "JwtConfig:Secret=770A8A65DA156D24770A8A65DA156D24"
+    depends_on:
+      - discountdb
+      - rabbitmq
+    ports:
+      - "8007:80"
+
+
+  ampmailer:
+    container_name: ampmailer
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - "SecurityKey=patuyitwqzogggyb"
+      - "SenderEmail=ptrckbyamasu@gmail.com"
+      - "EmailPort=587"
+      - "EmailHost=smtp.gmail.com"
+      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+    depends_on:
+      - rabbitmq
+
+    

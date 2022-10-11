@@ -13,14 +13,14 @@ using Ordering.Infrastructure.Persistence;
 namespace Ordering.Infrastructure.Migrations
 {
     [DbContext(typeof(OrderContext))]
-    [Migration("20220907140546_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20221008143303_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.8")
+                .HasAnnotation("ProductVersion", "6.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);

@@ -18,25 +18,23 @@ namespace Catalog.API.Repositories
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<ProductResponse<Product>> GetProducts(int Page)
+        public async Task<ProductResponse<Product>> GetProducts()
         {
             var pageSize = 6f;
 
             var filter = Builders<Product>.Filter.Ne(x => x.ItemsInStock, 0);
 
-            var TotalPages = _context.Products.Count(filter);
-
             var result = await _context.Products
                             .Find(filter)
-                            .Skip((Page - 1) * (int) pageSize)
-                            .Limit((int) pageSize)
+                            .SortByDescending(p => p.CreatedAt)
+                            //.Limit((int) pageSize)
                             .ToListAsync();
 
             return new ProductResponse<Product>
             {
-                CurrentPage = Page,
+                CurrentPage = 1,
                 Results = result,
-                TotalPages = (int) Math.Ceiling(TotalPages / pageSize)
+                TotalPages = (int) Math.Ceiling(result.Count() / pageSize)
             };
         }
 
@@ -57,14 +55,26 @@ namespace Catalog.API.Repositories
                             .Find(filter)
                             .ToListAsync();
         }
-        public async Task<IEnumerable<Product>> GetProductByCategory(string categoryName)
+        public async Task<ProductResponse<Product>> GetProductByCategory(string categoryName, int Page)
         {
+            var pageSize = 6f;
+
             FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Category, categoryName);
 
-            return await _context
-                            .Products
+            var TotalPages = _context.Products.Count(filter);
+
+            var result = await _context.Products
                             .Find(filter)
+                            .Skip((Page - 1) * (int)pageSize)
+                            .Limit((int)pageSize)
                             .ToListAsync();
+
+            return new ProductResponse<Product>
+            {
+                CurrentPage = Page,
+                Results = result,
+                TotalPages = (int)Math.Ceiling(TotalPages / pageSize)
+            };
         }
         public async Task<IEnumerable<Product>> GetProductByShopOwner(string ownerId)
         {

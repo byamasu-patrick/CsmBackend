@@ -7,6 +7,7 @@ using MassTransit;
 using AmpMailer.EventBusConsumer;
 using EventBus.Messages.Common;
 using Microsoft.Extensions.Hosting;
+using MailKit;
 
 IConfiguration configuration;
 configuration = new ConfigurationBuilder()
@@ -40,7 +41,12 @@ await Host.CreateDefaultBuilder(args)
             config.UsingRabbitMq((context, busFactConfig) =>
             {
 
-                busFactConfig.Host("amqp://guest:guest@localhost:5672");
+                var serviceProvider = services.BuildServiceProvider();
+                var configurationObject = serviceProvider.GetService<IConfiguration>();
+
+                Console.WriteLine($"Getting RabbitMQ Credentials: {configurationObject["EventBusSettings:HostAddress"]}");
+
+                busFactConfig.Host(configurationObject["EventBusSettings:HostAddress"]);
                 busFactConfig.ReceiveEndpoint(EventBusConstants.EmailQueue, c =>
                 {
                     c.ConfigureConsumer<SendingEmailEventConsumer>(context);

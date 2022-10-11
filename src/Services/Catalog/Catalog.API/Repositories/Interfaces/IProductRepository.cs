@@ -5,10 +5,10 @@ namespace Catalog.API.Repositories.Interfaces
 {
     public interface IProductRepository
     {
-        Task<ProductResponse<Product>> GetProducts(int Page);
+        Task<ProductResponse<Product>> GetProducts();
         Task<Product> GetProduct(string id);
         Task<IEnumerable<Product>> GetProductByName(string name);
-        Task<IEnumerable<Product>> GetProductByCategory(string categoryName);
+        Task<ProductResponse<Product>> GetProductByCategory(string categoryName, int Page);
         Task<IEnumerable<Product>> GetProductByShopOwner(string ownerId);
         Task CreateProduct(Product product);
         Task<bool> UpdateProduct(Product product);

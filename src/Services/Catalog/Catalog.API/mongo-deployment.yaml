@@ -1,0 +1,47 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: catalogdb-service
+  annotations:
+    service.beta.kubernetes.io/azure-dns-label-name: catalogdb
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 27017
+      targetPort: 27017
+  selector:
+    app: catalogdb
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: catalogdb
+spec:
+  selector:
+    matchLabels:
+      app: catalogdb
+  serviceName: "catalogdb-service"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: catalogdb
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: catalogdb
+          image: catalogdb
+          command:
+            - mongod
+            - "--bind_ip_all"
+            - "--replSet"
+            - rs0
+          ports:
+            - containerPort: 27017
+          volumeMounts:
+            - name: mongo_data
+              mountPath: /mnt/azure
+      volumes:
+        - name: mongo_data
+          persistentVolumeClaim:
+            claimName: mongo-pvc

@@ -12,10 +12,13 @@ namespace Catalog.API.Data
             var client = new MongoClient(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
             var database = client.GetDatabase(configuration.GetValue<string>("DatabaseSettings:DatabaseName"));
 
+            ProductReview = database.GetCollection<ProductReview>(configuration["DatabaseSettings:CollectionReviewProduct"]);
             Products = database.GetCollection<Product>(configuration.GetValue<string>("DatabaseSettings:CollectionName"));
-            CatalogContextSeed.SeedData(Products);
+            CatalogContextSeed.SeedData(Products, ProductReview);
+
         }
 
         public IMongoCollection<Product> Products { get; }
+        public IMongoCollection<ProductReview> ProductReview { get; }
     }
 }

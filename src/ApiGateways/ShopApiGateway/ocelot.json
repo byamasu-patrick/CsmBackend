@@ -118,7 +118,105 @@
       ],
       "UpstreamPathTemplate": "/Order/{userName}",
       "UpstreamHttpMethod": [ "GET" ]
+    },
+    //User API
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/Login",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8007"
+        }
+      ],
+      "UpstreamPathTemplate": "/Login",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/Register",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8007"
+        }
+      ],
+      "UpstreamPathTemplate": "/Register",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/RegisterFacebook",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8007"
+        }
+      ],
+      "UpstreamPathTemplate": "/RegisterFacebook",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/SendActivationEmail",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8007"
+        }
+      ],
+      "UpstreamPathTemplate": "/SendActivationEmail",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/ActivateAccount",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8007"
+        }
+      ],
+      "UpstreamPathTemplate": "/ActivateAccount",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/SendResetPasswordEmail",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8007"
+        }
+      ],
+      "UpstreamPathTemplate": "/SendResetPasswordEmail",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/ValidateResetPasswordToken",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8007"
+        }
+      ],
+      "UpstreamPathTemplate": "/ValidateResetPasswordToken",
+      "UpstreamHttpMethod": [ "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/v1/Auth/ResetPassword",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": "8007"
+        }
+      ],
+      "UpstreamPathTemplate": "/ResetPassword",
+      "UpstreamHttpMethod": [ "POST" ]
     }
+
   ],
   "GlobalConfiguration": {
     "BaseUrl": "http://localhost:5010/"

@@ -23,13 +23,15 @@ namespace Catalog.API.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
+
         [HttpGet("{page}")]
         [ProducesResponseType(typeof(ProductResponse<Product>), (int) HttpStatusCode.OK)]
         public async Task<ActionResult<ProductResponse<Product>>> GetProducts(int page)
         {
-            var products = await _repository.GetProducts(page);
+            var products = await _repository.GetProducts();
             return Ok(products);
         }
+
         [HttpGet("{id:length(24)}", Name = "GetProduct")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
@@ -46,12 +48,12 @@ namespace Catalog.API.Controllers
             return Ok(product);
         }
 
-        [Route("[action]/{category}", Name = "GetProductByCategory")]
+        [Route("[action]/{category}/{page}", Name = "GetProductByCategory")]
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<Product>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProductByCategory(string category)
+        [ProducesResponseType(typeof(ProductResponse<Product>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProductByCategory(string category, int page)
         {
-            var products = await _repository.GetProductByCategory(category);
+            var products = await _repository.GetProductByCategory(category, page);
             return Ok(products);
         }
 
@@ -86,6 +88,7 @@ namespace Catalog.API.Controllers
             var product = _mapper.Map<Product>(productDto);
 
             product.Id = ObjectId.GenerateNewId().ToString();
+            product.CreatedAt = DateTime.UtcNow;
 
             await _repository.CreateProduct(product);
 
