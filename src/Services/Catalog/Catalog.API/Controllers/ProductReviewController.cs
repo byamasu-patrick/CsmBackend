@@ -26,11 +26,11 @@ namespace Catalog.API.Controllers
 
         [Route("[action]/{productId}/{page}", Name = "GetReviewByproductId")]
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ProductReview>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<ProductReview>>> GetReviewByproductId(string productId, int page)
+        [ProducesResponseType(typeof(ProductResponse<ProductReview>), (int)HttpStatusCode.OK)]
+        public async Task<ProductResponse<ProductReview>> GetReviewByproductId(string productId, int page)
         {
             var products = await _repository.GetProductReviewByProductId(productId, page);
-            return Ok(products);
+            return products;
         }
 
         [Route("[action]/{reviewId}", Name = "GetReviewById")]

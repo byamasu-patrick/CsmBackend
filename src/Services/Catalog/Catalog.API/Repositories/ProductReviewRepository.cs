@@ -62,7 +62,7 @@ namespace Catalog.API.Repositories
             {
                 CurrentPage = Page,
                 Results = result,
-                TotalPages = (int)Math.Ceiling(TotalPages / pageSize)
+                TotalPages = (int) Math.Ceiling(TotalPages / pageSize)
             };
         }
 

@@ -21,6 +21,7 @@ using User.Application.Features.Commands.ResetPassword;
 using User.Application.Features.Commands.UpdateRefreshToken;
 using User.Application.Features.Queries.GetActivationToken;
 using User.Application.Features.Queries.GetForgotPasswordToken;
+using User.Application.Features.Queries.GetShops;
 using User.Application.Features.Queries.GetUserByEmail;
 using User.Application.Models;
 using User.Domain.Common.Models;
@@ -223,6 +224,43 @@ namespace User.API.Controllers
                 await _mediator.Send(insertActTokenCommand);
 
                 return Ok(new ApiResponse(true));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse(ex.Message) { Code = (int)AuthError.GenericAuthError });
+            }
+        }
+
+        [Route("[action]/{isShop}", Name = "GetShops")]
+        [HttpGet]
+        [ProducesResponseType(typeof(ActionResult<IEnumerable<ShopsInfos>>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<ShopsInfos>>> GetShops(bool isShop)
+        {
+            if (!ModelState.IsValid)
+            {
+                var serializableModelState = new SerializableError(ModelState);
+                return BadRequest(new ApiResponse(JsonConvert.SerializeObject(serializableModelState)) { Code = (int)BaseError.ParameterError });
+            }
+            try
+            {
+                var response = await _mediator.Send(new GetShopsQuery(isShop));
+
+                var finalResponse = _mapper.Map<IEnumerable<UserInfos>>(response.ToList());
+
+                List<ShopsInfos> shopsInfos = new List<ShopsInfos>();
+
+                foreach(var userInfo in finalResponse)
+                {
+                    shopsInfos.Add(new ShopsInfos
+                    {
+                        Id = userInfo.Id,
+                        Email = userInfo.Email,
+                        FirstName = userInfo.Profile.FirstName,
+                        LastName = userInfo.Profile.LastName
+                    });
+                }
+
+                return Ok(shopsInfos);
             }
             catch (Exception ex)
             {

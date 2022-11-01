@@ -17,8 +17,11 @@ message GetDiscountRequest{
 message CouponModel{
 	int32 id = 1;
 	string productName = 2;
-	string description = 3;
-	int32 amount = 4;
+	string productId = 3;
+	string headline = 4;
+	string description = 5;
+	string couponCode  = 6;
+	int32 amount = 7;
 }
 
 message CreateDiscountRequest {

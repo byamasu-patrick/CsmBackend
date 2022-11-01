@@ -49,7 +49,8 @@ namespace Payment.API.Repositories
 
         public async Task<IEnumerable<CardPayment>> GetCardPaymentUserId(string id)
         {
-            FilterDefinition<CardPayment> filter = Builders<CardPayment>.Filter.ElemMatch(p => p.UserId, id);
+            FilterDefinition<CardPayment> filter = Builders<CardPayment>.Filter.Eq(card => card.UserId, id);
+
 
             return await _context
                             .CardPayments

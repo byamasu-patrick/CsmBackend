@@ -54,15 +54,19 @@ namespace Discount.Grpc.Extensions
 
             command.CommandText = @"CREATE TABLE Coupon(Id SERIAL PRIMARY KEY, 
                                                                 ProductName VARCHAR(24) NOT NULL,
+                                                                ProductId VARCHAR(50) NOT NULL,
+                                                                Headline VARCHAR(100) NOT NULL,
                                                                 Description TEXT,
+                                                                CouponCode VARCHAR(15) NOT NULL,
                                                                 Amount INT)";
+
             command.ExecuteNonQuery();
 
 
-            command.CommandText = "INSERT INTO Coupon(ProductName, Description, Amount) VALUES('IPhone X', 'IPhone Discount', 150);";
+            command.CommandText = "INSERT INTO Coupon(ProductName, Description, ProductId, Headline, CouponCode, Amount) VALUES('IPhone X', 'IPhone Discount', '632b52550679f4f40cd35725', 'Mothers day promotion', 'OIS-UTW-JNG', 150);";
             command.ExecuteNonQuery();
 
-            command.CommandText = "INSERT INTO Coupon(ProductName, Description, Amount) VALUES('Samsung 10', 'Samsung Discount', 100);";
+            command.CommandText = "INSERT INTO Coupon(ProductName, Description, ProductId, Headline, CouponCode, Amount) VALUES('Samsung 10', 'Samsung Discount', '632b52550679f4f40cd35720', 'John Chilembwe day promotion', 'HGS-UWW-JNS', 100);";
             command.ExecuteNonQuery();
         }
     }

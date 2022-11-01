@@ -12,6 +12,7 @@ using User.Application.Features.Commands.ActivateUser;
 using User.Application.Features.Commands.UpdateRefreshToken;
 using User.Application.Features.Commands.InsertActivationToken;
 using User.Application.Features.Commands.InsertForgotPasswordToken;
+using User.Application.Features.Queries.GetShops;
 
 namespace User.Application.Mappings
 {
@@ -27,8 +28,11 @@ namespace User.Application.Mappings
             CreateMap<ForgotPasswordToken, ForgotPasswordTokenVm>().ReverseMap();
 
             CreateMap<UserData, UserDataVm>().ReverseMap();
+            CreateMap<UserData, UserVmShops>().ReverseMap();
             CreateMap<UserVm, UserDataVm>().ReverseMap();
             CreateMap<UserData, UserUpdateVm>().ReverseMap();
+
+            
         }
     }
 }

@@ -11,6 +11,8 @@ namespace User.Application.Contracts.Persistence
     public interface IUserRepository : IAsyncRepository<UserData>
     {
         Task<UserData> GetUserByEmail(string email);
+
+        Task<IEnumerable<UserData>> GetShops(bool shops);
         Task<ActivationToken> GetActivationToken(string activationToken);
         Task InsertActivationToken(ActivationToken activationToken);
         void UpdateRefreshToken(UserData user, string refreshToken, DateTime tokenExpiryDate);

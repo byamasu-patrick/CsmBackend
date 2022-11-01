@@ -96,7 +96,14 @@ namespace User.Infrastructure.Repositories
 
             return user;
         }
-
+        public async Task<IEnumerable<UserData>> GetShops(bool shops)
+        {
+            return await _dbContext.UserData
+                .Include(u => u.Profile)
+                .Include(u => u.UserType)
+                .Where(u => u.UserTypeId == 2)
+                .ToListAsync();
+        }
         public async Task InsertActivationToken(ActivationToken activationToken)
         {
             activationToken.CreatedAt = DateTime.UtcNow;
