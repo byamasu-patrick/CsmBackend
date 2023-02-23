@@ -6,16 +6,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Catalog.API.Models;
 using System;
+using Nest;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Catalog.API.Repositories
 {
     public class ProductRepository : IProductRepository
     {
         private readonly ICatalogContext _context;
-
-        public ProductRepository(ICatalogContext context)
+        private readonly IElasticClient _elasticClient;
+        public ProductRepository(ICatalogContext context, IElasticClient elasticClient)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
+            _elasticClient = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
+
         }
 
         public async Task<ProductResponse<Product>> GetProducts()
@@ -46,14 +53,44 @@ namespace Catalog.API.Repositories
                            .FirstOrDefaultAsync();
         }
 
+
+        private ProductResponse<Product> Ok(List<Product> products)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<IEnumerable<Product>> GetProductByName(string name)
         {
-            FilterDefinition<Product> filter = Builders<Product>.Filter.ElemMatch(p => p.Name, name);
+            FilterDefinition<Product> filter = Builders<Product>.Filter.Eq(p => p.Name, name);
 
             return await _context
                             .Products
                             .Find(filter)
                             .ToListAsync();
+        }
+        public async Task<ProductResponse<Product>> SearchProducts(string keyword, int Page)
+        {
+            var pageSize = 6f;
+            FilterDefinition<Product> filter = Builders<Product>.Filter.Or(
+         Builders<Product>.Filter.Regex(p => p.Name, new BsonRegularExpression(keyword, "i")),
+         Builders<Product>.Filter.Regex(p => p.Description, new BsonRegularExpression(keyword, "i")),
+         Builders<Product>.Filter.Regex(p => p.Category, new BsonRegularExpression(keyword, "i")),
+         Builders<Product>.Filter.Regex(p => p.Price, keyword)
+    );
+            var TotalPages = _context.Products.Count(filter);
+
+            var result = await _context.Products
+                            .Find(filter)
+                            .Skip((Page - 1) * (int)pageSize)
+                            .Limit((int)pageSize)
+                            .ToListAsync();
+
+            return new ProductResponse<Product>
+            {
+                CurrentPage = Page,
+                Results = result,
+                TotalPages = (int)Math.Ceiling(TotalPages / pageSize)
+            };
         }
         public async Task<ProductResponse<Product>> GetProductByCategory(string categoryName, int Page)
         {
@@ -111,5 +148,6 @@ namespace Catalog.API.Repositories
             return deleteResult.IsAcknowledged
                 && deleteResult.DeletedCount > 0;
         }
+
     }
 }
