@@ -1,5 +1,11 @@
 ﻿namespace Basket.API.Entities
 {
+    //public enum PaymentMethod
+    //{
+    //    AirtelMoney,
+    //    Mpamba,
+    //    Card
+    //}
     public class BasketCheckout
     {
         public string UserName { get; set; }
@@ -20,6 +26,6 @@
         public string CardNumber { get; set; }
         public string Expiration { get; set; }
         public string CVV { get; set; }
-        public int PaymentMethod { get; set; }
+        public string PaymentMethod{ get; set; }
     }
 }
