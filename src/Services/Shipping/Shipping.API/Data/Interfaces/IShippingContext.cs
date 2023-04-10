@@ -8,5 +8,12 @@ namespace Shipping.API.Data.Interfaces
     {
         IMongoCollection<ShippingAddress> ShippingAddresses { get; }
         IMongoCollection<ShippingMethods> ShippingMethods { get; }
+        IMongoCollection<Courier> Couriers { get; }
+
+        IMongoCollection<LocationAddress> Locations { get; }
+
+        IMongoCollection<Receiver> Receivers { get; }
+
+        IMongoCollection<Prices> Prices { get; }
     }
 }
