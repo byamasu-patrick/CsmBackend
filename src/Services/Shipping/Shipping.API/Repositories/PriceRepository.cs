@@ -47,7 +47,7 @@ namespace Shipping.API.Repositories
 
             var result = await _context.Prices
                             .Find(_ => true)
-                            .SortByDescending(p => p.KillogramRange)
+                            .SortByDescending(p => p.FromKg)
                             .Limit((int)pageSize)
                             .ToListAsync();
 

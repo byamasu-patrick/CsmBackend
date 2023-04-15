@@ -5,9 +5,11 @@ namespace Shipping.API.Models
 {
     public class CreatePriceDto
     {
-        public string KillogramRange { get; set; }
+        public decimal FromKg { get; set; }
+
+        public decimal ToKg { get; set; }
         [Required]
-        public string price { get; set; }
+        public decimal price { get; set; }
         public string LocationId { get; set; }
 
     }

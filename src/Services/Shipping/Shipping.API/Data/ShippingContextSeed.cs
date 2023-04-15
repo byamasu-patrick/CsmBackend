@@ -146,14 +146,16 @@ namespace Payment.API.Data
         new Prices()
         {
             // Set properties with valid data
-            KillogramRange= "0-1",
-            price = "2000"
+            FromKg= 0,
+            ToKg = 2,
+            price = 1500
         },
         new Prices()
         {
 
-            KillogramRange= "1-2",
-            price = "3000"
+            FromKg = 3,
+            ToKg = 5,
+            price = 2500
         }
 
     };
