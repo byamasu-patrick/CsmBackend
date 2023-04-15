@@ -16,6 +16,8 @@ namespace Ordering.Infrastructure.Persistence
         }
         public DbSet<Order> Orders { get; set; }
 
+        public DbSet<Product> Products { get; set; }
+
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
             foreach (var entry in ChangeTracker.Entries<EntityBase>())
@@ -35,6 +37,16 @@ namespace Ordering.Infrastructure.Persistence
                 }
             }
             return base.SaveChangesAsync(cancellationToken);
+        }
+  protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.Products)
+                .WithOne(p => p.Order)
+                .HasForeignKey(p => p.OrderId);
+
+            modelBuilder.Entity<Product>()
+                .HasKey(p => p.id);
         }
     }
 }

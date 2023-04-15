@@ -7,26 +7,26 @@ using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.Commands.CheckoutOrder
 {
-    public class CheckoutOrderCommand : IRequest<int>
+    public class CheckoutOrderCommand : IRequest<Guid>
     {
         public string UserName { get; set; }
         public decimal TotalPrice { get; set; }
-        public List<string> Products { get; set; }
+        public decimal ShippingPrice { get; set; }
+        public decimal TotalWeight { get; set; }
+        public List<OrderingShoppingCartItem> Products { get; set; }
 
         // BillingAddress
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string EmailAddress { get; set; }
-        public string AddressLine { get; set; }
-        public string Country { get; set; }
-        public string State { get; set; }
-        public string ZipCode { get; set; }
+        public string PhoneNumber { get; set; }
+        public string NationalId { get; set; }
+        public string CourierName { get; set; }
 
-        // Payment
-        public string CardName { get; set; }
-        public string CardNumber { get; set; }
-        public string Expiration { get; set; }
-        public string CVV { get; set; }
-        public int PaymentMethod { get; set; }
+        public string PhysicalAddress { get; set; }
+
+        public string PaymentMethod { get; set; }
+
+        public string OrderStatus { get; set; }
     }
 }
