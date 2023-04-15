@@ -10,6 +10,6 @@ namespace Basket.API.Repositories.Interfaces
         Task DeleteBasketItem(string userName, string ProductId);
         Task increaseItemQuantity(string userName, string ProductId, int value);
         Task decreaseItemQuantity(string userName, string ProductId, int value);
-   
+       
     }
 }

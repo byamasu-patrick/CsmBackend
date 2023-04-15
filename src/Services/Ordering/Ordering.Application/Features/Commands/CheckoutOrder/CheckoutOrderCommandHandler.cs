@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Ordering.Application.Features.Commands.CheckoutOrder
 {
-    public class CheckoutOrderCommandHandler : IRequestHandler<CheckoutOrderCommand, int>
+    public class CheckoutOrderCommandHandler : IRequestHandler<CheckoutOrderCommand, Guid>
     {
         private readonly IOrderRepository _orderRepository;
 
@@ -29,16 +29,17 @@ namespace Ordering.Application.Features.Commands.CheckoutOrder
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        public async Task<int> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CheckoutOrderCommand request, CancellationToken cancellationToken)
         {
             var orderEntity = _mapper.Map<Order>(request);
-            _logger.LogInformation($"Order -------------------------- {orderEntity.Products[0]}");
+            _logger.LogInformation($"Order -------------------------- {orderEntity.Products}");
 
             var newOrder = await _orderRepository.AddAsync(orderEntity);
 
-            _logger.LogInformation($"Order {newOrder.Id} is successfully created."); 
-            
+            _logger.LogInformation($"Order {newOrder.Id} is successfully created.");
+
             //await SendMail(newOrder);
+         
 
             return newOrder.Id;
         }

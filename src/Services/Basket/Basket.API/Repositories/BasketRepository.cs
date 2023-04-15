@@ -82,7 +82,7 @@ namespace Basket.API.Repositories
             }
             else
             {
-                basket.Items.Add(new ShoppingCartItem { ProductId = productId, Quantity = value });
+                basket.Items.Add(new BasketProduct { ProductId = productId, Quantity = value });
             }
 
             var updatedBasketJson = JsonConvert.SerializeObject(basket);
@@ -128,7 +128,7 @@ namespace Basket.API.Repositories
             }
             else
             {
-                basket.Items.Add(new ShoppingCartItem { ProductId = productId, Quantity = value });
+                basket.Items.Add(new BasketProduct { ProductId = productId, Quantity = value });
             }
 
             var updatedBasketJson = JsonConvert.SerializeObject(basket);
@@ -138,30 +138,6 @@ namespace Basket.API.Repositories
             await _redisCache.SetStringAsync($"{userName}_totalPrice", totalPrice.ToString());
             await _redisCache.SetStringAsync($"{userName}_totalWeight", totalWeight.ToString());
         }
-
-        // add product in the basket 
-
-        public async Task addProduct(string userName, string productId)
-        {
-            decimal totalPrice;
-
-
-            var json = await _redisCache.GetStringAsync(userName);
-
-            var basket = JsonConvert.DeserializeObject<ShoppingCart>(json);
-            if (basket != null )
-            {
-                var item = basket.Items.Find(item => item.ProductId == productId);
-                if ( item != null)
-                {
-                    
-                }
-
-            }
-
-
-        }
-
 
     }
 }
