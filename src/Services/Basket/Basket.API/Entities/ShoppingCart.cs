@@ -24,5 +24,17 @@ namespace Basket.API.Entities
                 return totalprice;
             }
         }
+        public decimal TotalWeight
+        {
+            get
+            {
+                decimal totalweight = 0;
+                foreach (var item in Items)
+                {
+                    totalweight += item.Weight * item.Quantity;
+                }
+                return totalweight;
+            }
+        }
     }
 }

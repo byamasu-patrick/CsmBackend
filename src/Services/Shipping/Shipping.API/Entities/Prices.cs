@@ -11,9 +11,11 @@ namespace Shipping.API.Entities
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
         [Required]
-        public string KillogramRange { get; set; }
+        public decimal  FromKg { get; set; }
         [Required]
-        public string price { get; set; }
+        public decimal ToKg { get; set; }
+        [Required]
+        public decimal  price { get; set; }
 
         [ForeignKey("Location")]
         public string LocationId { get; set; }

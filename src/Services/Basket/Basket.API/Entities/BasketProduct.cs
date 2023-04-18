@@ -11,5 +11,8 @@ namespace Basket.API.Entities
         public decimal SubTotal { get; set; }
         public decimal Weight { get; set; }
         public string Color { get; set; }
+        public decimal Price { get; set; }
+        public string ProductId { get; set; }
+        public string ProductName { get; set; }
     }
 }

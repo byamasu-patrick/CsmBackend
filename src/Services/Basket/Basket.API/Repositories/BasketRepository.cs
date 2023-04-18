@@ -47,17 +47,20 @@ namespace Basket.API.Repositories
              var removedItem = basket.Items.RemoveAll(item => item.ProductId == productId);
 
             var totalPrice = basket.TotalPrice;
+            var totalWeight = basket.TotalWeight;
 
             var updatedBasketJson = JsonConvert.SerializeObject(basket);
 
             await _redisCache.SetStringAsync(userName, updatedBasketJson);
 
             await _redisCache.SetStringAsync($"{userName}_totalPrice", totalPrice.ToString());
+            await _redisCache.SetStringAsync($"{userName}_totalWeight", totalWeight.ToString());
         }
         // the function to increament the quantity of a specified product in the basket a
         public async Task increaseItemQuantity(string userName, string productId, int value)
         {
             decimal totalPrice;
+            decimal totalWeight;
             
             
             var json = await _redisCache.GetStringAsync(userName);
@@ -67,6 +70,7 @@ namespace Basket.API.Repositories
       
             var item = basket.Items.Find(item => item.ProductId == productId);
             totalPrice = basket.TotalPrice;
+            totalWeight = basket.TotalWeight;
 
             if (item != null)
             {
@@ -74,6 +78,7 @@ namespace Basket.API.Repositories
                 item.Quantity += value;
 
                 totalPrice = totalPrice + (item.Price * value);
+                totalWeight = totalWeight + (item.Weight * value);
             }
             else
             {
@@ -85,11 +90,13 @@ namespace Basket.API.Repositories
             await _redisCache.SetStringAsync(userName, updatedBasketJson);
 
             await _redisCache.SetStringAsync($"{userName}_totalPrice", totalPrice.ToString());
+            await _redisCache.SetStringAsync($"{userName}_totalWeight", totalWeight.ToString());
         }
         // a function to decrement the quantity of a specified product in the basket 
         public async Task decreaseItemQuantity(string userName, string productId, int value)
         {
             decimal totalPrice;
+            decimal totalWeight;
 
 
             var json = await _redisCache.GetStringAsync(userName);
@@ -99,6 +106,7 @@ namespace Basket.API.Repositories
 
             var item = basket.Items.Find(item => item.ProductId == productId);
             totalPrice = basket.TotalPrice;
+            totalWeight = basket.TotalWeight;
 
             if (item != null)
             {
@@ -107,12 +115,14 @@ namespace Basket.API.Repositories
                 if (quantity > 0)
                 {
                     totalPrice = totalPrice - (item.Price * value);
+                    totalWeight = totalWeight - (item.Weight * value);
 
                 }
                 else
                 {
                     item.Quantity = 0;
                     totalPrice = totalPrice - item.Price;
+                    totalWeight = totalWeight - item.Weight;
                 }
 
             }
@@ -126,6 +136,7 @@ namespace Basket.API.Repositories
             await _redisCache.SetStringAsync(userName, updatedBasketJson);
 
             await _redisCache.SetStringAsync($"{userName}_totalPrice", totalPrice.ToString());
+            await _redisCache.SetStringAsync($"{userName}_totalWeight", totalWeight.ToString());
         }
 
     }
