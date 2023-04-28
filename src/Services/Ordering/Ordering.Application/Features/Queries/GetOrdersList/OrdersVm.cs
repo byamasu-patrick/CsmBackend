@@ -29,5 +29,7 @@ namespace Ordering.Application.Features.Queries.GetOrdersList
         public string PaymentMethod { get; set; }
 
         public string OrderStatus { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime? LastModifiedDate { get; set; }
     }
 }
