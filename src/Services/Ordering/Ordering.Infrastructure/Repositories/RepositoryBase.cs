@@ -21,7 +21,9 @@ namespace Ordering.Infrastructure.Repositories
         }
         public async Task<IReadOnlyList<T>> GetAllAsync()
         {
-            return await _dbContext.Set<T>().ToListAsync();
+            //return await _dbContext.Set<T>().ToListAsync();
+            return (IReadOnlyList<T>)await _dbContext.Orders.
+                Include(o => o.Products).ToListAsync();
         }
 
         public async Task<IReadOnlyList<T>> GetAsync(Expression<Func<T, bool>> predicate)
@@ -79,7 +81,5 @@ namespace Ordering.Infrastructure.Repositories
             _dbContext.Set<T>().Remove(entity);
             await _dbContext.SaveChangesAsync();
         }
-
-
     }
 }

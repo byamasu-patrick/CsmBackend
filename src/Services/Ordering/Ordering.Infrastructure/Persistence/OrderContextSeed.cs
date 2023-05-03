@@ -22,12 +22,30 @@ namespace Ordering.Infrastructure.Persistence
 
         private static IEnumerable<Order> GetPreconfiguredOrders()
         {
-            var products = new List<string>();
-            products.Add("63171fb70f38058887656184");
+            var products = new List<Product>();
+            //products.Add("63171fb70f38058887656184");
+            var product = new Product
+            {
+                id = 1,
+                Quantity = 2,
+                Color = "Red",
+                Price = 1000.99m,
+                SubTotal = 2001.98m,
+                ProductId = "123",
+                ProductName = "Totenhamm Hotspurs Jersy"
+            };
+
+            products.Add(product);
+
+
             return new List<Order>
             {
-                new Order() { UserName = "Patrick", FirstName = "Byamasu", LastName = "Patrick", EmailAddress = "ptrckbyamasu@gmail.com", AddressLine = "Lilongwe, Area 47, Sector 4", Country = "Malawi", TotalPrice = 350, Products=products, CVV = "520",
-                    CardName = "Byamasu Patrick", CardNumber = "4598675434529988", PaymentMethod = 1, ZipCode = "00265", Expiration = "2023", State = "Lilongwe"
+                new Order() { UserName = "Patrick", FirstName = "Byamasu", LastName = "Patrick",
+                    EmailAddress = "ptrckbyamasu@gmail.com", OrderStatus = "Processing",
+                    PhysicalAddress = "Zolozolo", TotalPrice = 350,
+                    Products=products, PaymentMethod = "AirtelMoney",
+                    CourierName = "CTS",
+                    NationalId = "123",PhoneNumber = "+265882751146" 
                 }
             };
         }
