@@ -58,6 +58,30 @@ namespace Basket.API.Controllers
             await _repository.DeleteBasket(userName);
             return Ok();
         }
+        [HttpDelete]
+        [Route("DeleteBasketItem/{userName}/{productId}")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeleteBasketItem(string userName, string productId)
+        {
+            await _repository.DeleteBasketItem(userName, productId);
+            return Ok();
+        }
+        [HttpPost]
+        [Route("increaseItemQuantity/{userName}/{productId}/{value}")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> increaseItemQuantity(string userName, string productId, int value)
+        {
+            await _repository.increaseItemQuantity(userName, productId, value);
+            return Ok();
+        }
+        [HttpPost]
+        [Route("decreaseItemQuantity/{userName}/{productId}/{value}")]
+        [ProducesResponseType(typeof(void), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> decreaseItemQuantity(string userName, string productId, int value)
+        {
+            await _repository.decreaseItemQuantity(userName, productId, value);
+            return Ok();
+        }
         [Route("[action]")]
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]

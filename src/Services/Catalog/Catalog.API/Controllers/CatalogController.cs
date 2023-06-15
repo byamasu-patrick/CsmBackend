@@ -5,6 +5,7 @@ using Catalog.API.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
+using Nest;
 using System.Net;
 
 namespace Catalog.API.Controllers
@@ -15,13 +16,15 @@ namespace Catalog.API.Controllers
     {
         private readonly IProductRepository _repository;
         private readonly ILogger<CatalogController> _logger;
+        private readonly IElasticClient _elasticClient;
         private IMapper _mapper;
 
-        public CatalogController(IProductRepository repository, ILogger<CatalogController> logger, IMapper mapper)
+        public CatalogController(IProductRepository repository, ILogger<CatalogController> logger, IMapper mapper, IElasticClient elasticClient)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
+            _elasticClient = elasticClient ?? throw new ArgumentNullException(nameof(elasticClient));
         }
 
         [HttpGet("{page}")]
@@ -35,7 +38,7 @@ namespace Catalog.API.Controllers
         [HttpGet("{id:length(24)}", Name = "GetProduct")]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType(typeof(Product), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<Product>> GetProductById(string id)
+        public async Task<ActionResult> GetProductById(string id)
         {
             var product = await _repository.GetProduct(id);
 
@@ -56,6 +59,14 @@ namespace Catalog.API.Controllers
             var products = await _repository.GetProductByCategory(category, page);
             return Ok(products);
         }
+        [Route("[action]/{keyword}/{page}", Name = "SearchProducts")]
+        [HttpGet]
+        [ProducesResponseType(typeof(ProductResponse<Product>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<Product>>> SearchPrducts(string keyword, int page = 1)
+        {
+            var products = await _repository.SearchProducts(keyword, page);
+            return Ok(products);
+        }
 
         [Route("[action]/{ownerId}", Name = "GetProductByOwner")]
         [HttpGet]
@@ -65,6 +76,25 @@ namespace Catalog.API.Controllers
             var products = await _repository.GetProductByShopOwner(ownerId);
             return Ok(products);
         }
+
+     /*   [Route("[action]/{keyword}", Name = "SearchProducts")]
+        [HttpGet]
+        public async Task<IActionResult> SearchProducts(string keyword)
+        {
+         
+
+            var result = await _elasticClient.SearchAsync<Product>(
+                s => s.Query(
+                    q => q.QueryString(
+                        d => d.Query('*' + keyword + '*')
+                        )
+                    ).Size(1000)
+                );
+
+
+            return Ok(result.Documents.ToList());
+
+        } */
 
         [Route("[action]/{name}", Name = "GetProductByName")]
         [HttpGet]
@@ -91,6 +121,7 @@ namespace Catalog.API.Controllers
             product.CreatedAt = DateTime.UtcNow;
 
             await _repository.CreateProduct(product);
+            await _elasticClient.IndexDocumentAsync(product);
 
             return CreatedAtRoute("GetProduct", new { id = product.Id }, product);
         }

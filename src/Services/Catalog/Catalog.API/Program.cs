@@ -3,11 +3,9 @@ using Catalog.API.Data.Interfaces;
 using Catalog.API.Repositories;
 using Catalog.API.Repositories.Interfaces;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Configuration;
-using HealthChecks.UI.Client;
-using MongoDB.Driver;
 using Microsoft.OpenApi.Models;
-using AutoMapper;
+using Catalog.API.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +22,7 @@ builder.Services.AddHealthChecks()
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddElasticSearch(builder.Configuration);
 builder.Services.AddSwaggerGen( c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalog.API", Version = "v1" });
