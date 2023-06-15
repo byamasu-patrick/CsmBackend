@@ -39,12 +39,12 @@ var app = builder.Build();
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-app.MigrateDatabase<UserContext>((context, services) =>
-{
-    var logger = services.GetRequiredService<ILogger<UserContextSeed>>();
-    UserContextSeed.SeedAsync(context, logger)
-    .Wait();
-});
+//app.MigrateDatabase<UserContext>((context, services) =>
+//{
+//    var logger = services.GetRequiredService<ILogger<UserContextSeed>>();
+//    UserContextSeed.SeedAsync(context, logger)
+//    .Wait();
+//});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -17,6 +17,7 @@ namespace Catalog.API.Entities
         public string ImageFile { get; set; }
         public decimal Price { get; set; }
         public int ItemsInStock { get; set; }
+        //public string Color { get; set; }
         public string UserId { get; set; }
         //public IList<ProductReview> Reviews { get; set; }
         [BsonElement]

@@ -29,7 +29,6 @@ await Host.CreateDefaultBuilder(args)
     {
         services.AddLogging(configure => configure.AddSerilog());
 
-        // Adding Dependency Injection
         services.AddSingleton<IConfiguration>(configuration);
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -40,12 +39,11 @@ await Host.CreateDefaultBuilder(args)
 
             config.UsingRabbitMq((context, busFactConfig) =>
             {
-
                 var serviceProvider = services.BuildServiceProvider();
                 var configurationObject = serviceProvider.GetService<IConfiguration>();
 
                 Console.WriteLine($"Getting RabbitMQ Credentials: {configurationObject["EventBusSettings:HostAddress"]}");
-
+                // amqp://guest:guest@localhost:5672 
                 busFactConfig.Host(configurationObject["EventBusSettings:HostAddress"]);
                 busFactConfig.ReceiveEndpoint(EventBusConstants.EmailQueue, c =>
                 {

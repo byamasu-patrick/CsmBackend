@@ -2,8 +2,8 @@
 
 namespace Catalog.API.Models
 {
-    public class CreateProductDto
-    {
+    public class CreateProductDto {      // 
+     // Data Transfer Object
         [Required]
         public string Name { get; set; }
         [Required]

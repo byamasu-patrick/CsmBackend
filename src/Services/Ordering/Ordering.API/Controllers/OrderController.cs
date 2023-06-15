@@ -27,6 +27,9 @@ namespace Ordering.API.Controllers
         {
             var query = new GetAllOrdersQuery();
             var orders = await _mediator.Send(query);
+            // recommended products (Rest API, Message Broker, gRPC-protobuf)
+            // Event Driven Configuration for Message Queue(RabbitMQ)
+
             return Ok(orders);
         }
 

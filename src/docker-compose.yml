@@ -50,7 +50,7 @@ services:
     image: ${DOCKER_REGISTRY-}orderingapi
     build:
       context: .
-      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+      dockerfile: Services/Ordering/Ordering.API/
 
   shopapigateway:
     image: ${DOCKER_REGISTRY-}shopapigateway
